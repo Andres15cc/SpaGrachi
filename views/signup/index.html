@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Registro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-['Montserrat'] bg-slate-50 bg-[url('/assets/signup.png')] bg-cover bg-center bg-no-repeat min-h-screen">
+
+<div id="notification" class="fixed top-20 right-5 z-[100] flex flex-col items-end pointer-events-none"></div>
+
+    <nav class="fixed top-0 right-0 left-0 bg-rose-400 h-16 z-50 shadow-md">
+        <div class="max-w-7xl h-16 mx-auto flex items-center px-4 justify-between">
+            
+            <div class="flex items-center gap-2">
+                <img src="/assets/logo.png" alt="logo" class="h-12 w-12 rounded-full bg-white object-cover">
+                <span class="text-white font-bold text-xl tracking-tight">SpaGrachi</span>
+            </div>
+
+            <div class="flex gap-5">
+                 <button c >
+                <a href="/" class="bg-rose-800 hover:bg-rose-900 py-2 px-4 rounded-lg text-white font-bold  w-2/4 text-center  ">Inicio</a>
+              </button>
+
+               <button >
+                <a href="/login/" class="bg-rose-800 hover:bg-rose-900 py-2 px-4 rounded-lg text-white font-bold  w-2/4 text-center  ">Login</a>
+              </button>
+            </div>
+             
+    </nav>
+    
+
+    </div>
+   
+    <div class="flex pt-28  max-w-7xl mx-auto justify-center items-center px-4">
+      
+      <form
+        id="form"
+        class="flex  flex-col gap-4 bg-zinc-200 p-4 rounded-lg text-lg shadow-lg lg:w-2/4"
+      >
+        <div class="flex flex-col gap-2">
+          <label class="font-bold text-zinc-900" for="name-input"
+            >Nombre y apellido<span class=" text-red-500">*</span></label
+          >
+          <input
+            id="name-input"
+            type="text"
+            name="name-input"
+            autocomplete="off"
+            placeholder="Ingresa tu Nombre"
+            class="rounded-lg p-2 bg-zinc-100 focus:outline-rose-700"
+          />
+          <p class="text-sm text-zinc-800">
+            Tanto el nombre como el apellido deben comenzar con mayúsculas.
+          </p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="font-bold  text-zinc-900" for="email-input"
+            >Email <span class=" text-red-500">*</span></label
+          >
+          <input
+            id="email-input"
+            type="text"
+            name="email-input"
+            autocomplete="off"
+            placeholder="ejemplo@gmail.com"
+            class="rounded-lg p-2 bg-zinc-100 focus:outline-rose-700"
+          />
+          <p class="text-sm text-zinc-800">El correo es requerido.</p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="font-bold  text-zinc-900" for="password-input"
+            >Contraseña <span class="text-red-500">*</span></label
+          >
+          <input
+            id="password-input"
+            type="password"
+            name="password-input"
+            autocomplete="off"
+            placeholder="Ingresa tu contraseña"
+            class="rounded-lg p-2 bg-zinc-100 focus:outline-rose-700"
+          />
+          <p class="text-sm text-zinc-800">
+           Minimo 8 caracteres, 1 letra, 1 mayuscula y 1 numero.
+          </p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="font-bold text-zinc-900" for="match-input"
+            >Confirmar contraseña
+            <span class="text-red-500">*</span></label
+          >
+          <input
+            id="match-input"
+            type="password"
+            name="match-input"
+            autocomplete="off"
+            placeholder="Ingresa tu contraseña"
+            class="rounded-lg p-2 bg-zinc-100 focus:outline-rose-700"
+          />
+          <p class="text-sm text-zinc-800">Confirmar contraseña.</p>
+        </div>
+        <button
+          id="form-btn"
+          class="bg-rose-700 py-2 px-4 rounded-lg font-bold text-white hover:bg-rose-800 text-center transition ease-in-out disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled
+        >
+          Registrar
+        </button>
+      </form>
+    </div>
+    <script type="module" src="./index.js"></script>
+
+</body>
+</html>

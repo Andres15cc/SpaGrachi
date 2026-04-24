@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Admin</title>
+</head>
+<body class="font-['Montserrat'] bg-slate-50">
+
+    <nav class="fixed top-0 right-0 left-0 bg-rose-400 h-16 z-50 shadow-md">
+        <div class="max-w-7xl h-16 mx-auto flex items-center px-4 justify-between">
+            
+            <div class="flex items-center gap-2">
+                <img src="/assets/logo.png" alt="logo" class="h-12 w-12 rounded-full bg-white object-cover">
+                <span class="text-white font-bold text-xl tracking-tight">SpaGrachi</span>
+            </div>
+
+            <div id="" class=" flex-row gap-7">
+                <button id="btnLogout">
+                  <a href="" class="bg-rose-800 hover:bg-rose-900 py-2 px-4 rounded-lg text-white font-bold  w-2/4 text-center  ">Cerrar Sesión</a>
+                </button>
+            </div>
+        </div>    
+    </nav>
+   
+    
+    <div class="max-w-6xl mx-auto p-8 mt-16 ">
+    
+
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 border-b pb-4 ">
+    
+            <h1 class="text-2xl md:text-3xl font-bold text-rose-500 w">
+                Panel de Administración.
+            </h1>
+
+            <button id="btnAbrirModal" class="w-full md:w-auto bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-6 rounded-lg transition-colors shadow-md">
+               + Agregar Cita
+            </button>
+    
+        </div>
+
+    
+        <div class="bg-white shadow-md rounded-lg overflow-x-auto max-h-[500px] overflow-y-auto ">
+            <table class="min-w-full leading-normal">
+                <thead class="sticky top-0 z-10">
+                    <tr class=" bg-rose-100 text-rose-700">
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Cliente</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Telefono</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Servicio</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Fecha</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Hora</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Estado</th>
+                         <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-citas">
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+
+
+    <div id="modalCita" class="fixed inset-0 bg-black/50 hidden z-50  items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+            <button id="btnCerrarModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        
+            <h2 class="text-2xl font-bold text-rose-500 mb-6 text-center">Registrar Cita</h2>
+            <div id="notification" class="fixed top-10 left-0 right-0 z-[100] flex justify-center pointer-events-none"></div>
+        
+            <form id="formAdmin" >
+                <div class="space-y-4">
+                    <input type="text" id="admin-nombre" placeholder="Nombre del cliente" class="w-full p-2 border rounded-lg focus:outline-rose-500" required>
+                    <input type="email" id="admin-email" placeholder="Correo electrónico" class="w-full p-2 border rounded-lg focus:outline-rose-500" required>
+                    <input type="text" id="admin-telefono" placeholder="Teléfono" class="w-full p-2 border rounded-lg focus:outline-rose-500" required>
+                
+                    <select id="admin-servicio" class="w-full p-2 border rounded-lg focus:outline-rose-500" required>
+                        <option value="" disabled selected>Selecciona Servicio</option>
+                    </select>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="date" id="admin-fecha" class="p-2 border rounded-lg focus:outline-rose-500" required>
+                        <select id="admin-hora" class="p-2 border rounded-lg focus:outline-rose-500" required>
+                            <option value="" disabled selected>Hora</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-rose-500 text-white font-bold py-3 rounded-xl hover:bg-rose-600 transition-colors">
+                    Guardar Cita
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    
+
+    <div id="custom-confirm" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] hidden items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full transform transition-all scale-95 border border-gray-100">
+                
+            <h3 class="text-lg font-bold text-gray-900 text-center">¿Eliminar esta cita?</h3>
+            
+            <div class="flex gap-3 mt-6">
+                <button id="cancel-delete" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+                   Cancelar
+                </button>
+                <button id="confirm-delete" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 shadow-lg shadow-red-200 transition-all">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+
