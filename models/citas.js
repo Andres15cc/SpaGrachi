@@ -14,11 +14,16 @@ const citaSchema = new mongoose.Schema({
     },
     telefono: {
         type: String,
-        required: [true, 'El teléfono es obligatorio']
+        required: [true, 'El teléfono es obligatorio'],
+        trim: true
     },
     servicio: {
         type: String, 
-        required: true
+        required: true,
+    },
+    estilista: {
+        type: String,
+        required: [true, 'El estilista es obligatorio'],
     },
     fecha: {
         type: Date,
@@ -30,13 +35,10 @@ const citaSchema = new mongoose.Schema({
     },
     estado: {
         type: String,
-        enum: ['pendiente', 'confirmada', 'completada'],
+        enum: ['pendiente', 'completada'],
         default: 'pendiente'
     },
-    notas: {
-        type: String,
-        trim: true
-    }
+ 
 }, {
     timestamps: true // Esto crea automáticamente campos 'createdAt' y 'updatedAt'
 });

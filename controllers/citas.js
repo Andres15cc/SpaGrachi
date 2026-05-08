@@ -5,10 +5,10 @@ const { userExtractor } = require('../middleware/auth');
 
 citasRouter.post('/', async (req, res) => {
     try {
-        const { nombreCliente, email, telefono, servicio, fecha, hora } = req.body;
+        const { nombreCliente, email, telefono, estilista, servicio, fecha, hora } = req.body;
 
 
-        const citaExistente = await Cita.findOne({ fecha, hora });
+        const citaExistente = await Cita.findOne({ estilista, fecha, hora });
 
         if (citaExistente) {
             // Si la encontramos, respondemos con error 400 y NO guardamos nada
@@ -21,6 +21,7 @@ citasRouter.post('/', async (req, res) => {
             nombreCliente,
             email,
             telefono,
+            estilista,
             servicio,
             fecha,
             hora: String(hora) // Lo guardamos como String puro

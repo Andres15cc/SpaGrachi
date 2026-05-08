@@ -22,9 +22,11 @@ const serviciosAdmin = [
      "Depilacion de bozo" ,
      "Pestañas pelo a pelo" ];
 
+const estilistasAdmin = ["Graciela", "Moises - barbero", "Luis - barbero", "Melissa - peluquera", "Barbara - manicurista"];
+
 const selectHoraAdmin = document.getElementById('admin-hora');
 const selectSvcAdmin = document.getElementById('admin-servicio');
-
+const selectEstilistaAdmin = document.getElementById('admin-estilista');
 // Llenar selectores
 horariosAdmin.forEach(h => {
     let opt = new Option(h, h);
@@ -34,6 +36,11 @@ horariosAdmin.forEach(h => {
 serviciosAdmin.forEach(s => {
     let opt = new Option(s, s);
     selectSvcAdmin.add(opt);
+});
+
+estilistasAdmin.forEach(e => {
+    let opt = new Option(e, e);
+    selectEstilistaAdmin.add(opt);
 });
 
 // Bloquear fechas pasadas en el modal
@@ -69,6 +76,7 @@ formAdmin.onsubmit = async (e) => {
         nombreCliente: document.getElementById('admin-nombre').value,
         email: document.getElementById('admin-email').value,
         telefono: document.getElementById('admin-telefono').value,
+        estilista: selectEstilistaAdmin.value,
         servicio: selectSvcAdmin.value,
         fecha: inputFechaAdmin.value,
         hora: selectHoraAdmin.value
@@ -148,7 +156,7 @@ const cambiarEstado = async (id, estadoActual) => {
     }
 }; window.cambiarEstado = cambiarEstado;
 
-const btnLogout = document.getElementById('btnLogout');
+
 
 //confirmacion para borrar cita
 const modalConfirm = document.getElementById('custom-confirm');
@@ -177,6 +185,8 @@ const mostrarConfirmacion = () => {
         };
     });
 };
+
+const btnLogout = document.getElementById('btnLogout');
 
 if (btnLogout) {
     btnLogout.addEventListener('click', async () => {
@@ -231,6 +241,9 @@ const cargarCitas = async () => {
         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
             ${cita.telefono}
         </td>
+         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+            ${cita.estilista}
+        </td>
         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
             ${cita.servicio}
         </td>
@@ -275,3 +288,96 @@ const cargarCitas = async () => {
 
 // Iniciar carga de la tabla
 cargarCitas();
+
+
+// --- LÓGICA DE FILTROS INTEGRADA ---
+
+// 1. SELECCIÓN DE ELEMENTOS DEL DOM
+const filtroEstilista = document.getElementById('filtro-estilista');
+const filtroNombre = document.getElementById('filtro-nombre');
+const filtroEstado = document.getElementById('filtro-estado');
+const contadorCitas = document.getElementById('contador-citas');
+const tablaCitas = document.getElementById('lista-citas');
+const btnLimpiar = document.getElementById('btn-limpiar-filtros');
+
+// 2. FUNCIÓN PARA LLENAR EL SELECT DE FILTROS
+const inicializarFiltroEstilistas = () => {
+    if (!filtroEstilista) return;
+
+    // Limpiamos el select y ponemos la opción inicial
+    filtroEstilista.innerHTML = '<option value="todos">Todos los profesionales</option>';
+    
+    // Usamos la misma lista 'estilistasAdmin' que definiste arriba para el modal
+    estilistasAdmin.forEach(est => {
+        const opt = document.createElement('option');
+        // Guardamos el valor en minúsculas para que coincida con la lógica de aplicarFiltros
+        opt.value = est.toLowerCase().trim(); 
+        opt.textContent = est;
+        filtroEstilista.appendChild(opt);
+    });
+};
+
+// 3. FUNCIÓN DE FILTRADO
+const aplicarFiltros = () => {
+    if (!tablaCitas) return;
+
+    const valEst = filtroEstilista.value.toLowerCase().trim();
+    const valNom = filtroNombre.value.toLowerCase().trim();
+    const valEstd = filtroEstado.value.toLowerCase().trim();
+    
+    const filas = tablaCitas.querySelectorAll('tr');
+    let visibles = 0;
+    let total = filas.length;
+
+    filas.forEach(fila => {
+        // IMPORTANTE: En tu cargarCitas(), las columnas son:
+        // [0] Cliente/Email, [1] Teléfono, [2] Estilista, [6] Estado
+        const clienteTxt = fila.children[0]?.textContent.toLowerCase().trim() || "";
+        const estilistaTxt = fila.children[2]?.textContent.toLowerCase().trim() || "";
+        const estadoTxt = fila.children[6]?.textContent.toLowerCase().trim() || "";
+
+        const coincideEst = valEst === 'todos' || estilistaTxt.includes(valEst);
+        const coincideNom = clienteTxt.includes(valNom);
+        const coincideEstd = valEstd === 'todos' || estadoTxt === valEstd;
+
+        if (coincideEst && coincideNom && coincideEstd) {
+            fila.style.display = ""; 
+            visibles++;
+        } else {
+            fila.style.display = "none"; 
+        }
+    });
+
+    if (contadorCitas) {
+        if (valEst === 'todos' && valNom === "" && valEstd === 'todos') {
+            contadorCitas.innerHTML = `Mostrando <span class="text-rose-600">${total}</span> citas en total`;
+        } else {
+            contadorCitas.innerHTML = `Resultados: <span class="text-rose-600">${visibles}</span> de ${total}`;
+        }
+    }
+};
+
+// 4. EVENTOS
+if (filtroEstilista) filtroEstilista.addEventListener('change', aplicarFiltros);
+if (filtroEstado) filtroEstado.addEventListener('change', aplicarFiltros);
+if (filtroNombre) filtroNombre.addEventListener('input', aplicarFiltros);
+
+if (btnLimpiar) {
+    btnLimpiar.addEventListener('click', () => {
+        filtroEstilista.value = 'todos';
+        filtroNombre.value = '';
+        filtroEstado.value = 'todos';
+        aplicarFiltros();
+    });
+}
+
+// 5. OBSERVAR CAMBIOS
+// Esto es vital: cada vez que cargarCitas() termine, se ejecutará el filtro automáticamente
+const observer = new MutationObserver(() => aplicarFiltros());
+if (tablaCitas) observer.observe(tablaCitas, { childList: true });
+
+// 6. EJECUCIÓN AL CARGAR LA PÁGINA
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarFiltroEstilistas(); // <-- ESTO ES LO QUE FALTABA
+    aplicarFiltros();
+});

@@ -2,6 +2,7 @@
 import { createNotification } from "/components/notification.js";
 const selectServicios = document.getElementById('opciones');
 const selectHoras = document.getElementById('hora-input');
+const selectEstilistas = document.getElementById('estilista-input');
 const inputFecha = document.getElementById('fecha-input');
 const form = document.getElementById('form');
 
@@ -23,6 +24,8 @@ const servicios = [
 
 const horarios = ["09:00 AM", "10:00 AM", "11:00 AM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"];
 
+const estilistas = ["Graciela", "Moises - barbero", "Luis - barbero", "Melissa - peluquera", "Barbara - manicurista"];
+
 // 3. Renderizar opciones dinámicamente
 const cargarOpciones = () => {
     servicios.forEach(svc => {
@@ -37,6 +40,11 @@ const cargarOpciones = () => {
         option.value = hora;
         option.textContent = hora;
         selectHoras.appendChild(option);
+    });
+
+    estilistas.forEach(est => {
+        const option = new Option(est, est);
+        selectEstilistas.appendChild(option);
     });
 
     // Bloquear fechas pasadas
@@ -56,6 +64,7 @@ form.addEventListener('submit', async (e) => {
         email: document.getElementById('email-input').value,
         telefono: document.getElementById('telefono-input').value,
         servicio: selectServicios.value,
+        estilista: selectEstilistas.value,
         fecha: inputFecha.value,
         hora: selectHoras.value
     };
